@@ -134,6 +134,9 @@ $('#edit-modal').on('show.bs.modal', function(e) {
                                 optionFieldMaker(optField,c,splitKey[1], element)
                             });
                             newBox.appendChild(optField);
+                        }else{
+                            var optField = document.createElement("div");
+                            optField.className = "optionFieldsWrapper";
                         }
                     }  
                 }); // End Of Foreach

@@ -59,7 +59,9 @@ function enableAmountField(e) {
 }
 
 function enableOptionDiv() {
-    var optionFieldsWrapper = document.getElementsByClassName('optionFieldsWrapper')
+    console.log(optAmtIndex)
+    var optionFieldsWrapper = document.getElementsByClassName('optionFieldsWrapper')[optAmtIndex]
+    console.log(optionFieldsWrapper)
     let optionType          = document.getElementsByClassName('optionType')
     
     let optTyp              = $( ".optionType option:selected" ).val()
