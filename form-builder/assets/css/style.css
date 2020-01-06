@@ -1,0 +1,105 @@
+.form-group {
+    border: 1px solid #c7c4c4;
+    padding: 25px;
+}
+.optDefineDiv {
+    margin-top:10px
+}
+.formName, #formType {
+    margin-bottom: 10px;
+}
+.btn-add-block {
+    border: none;
+    background: #8AE65C;
+    color: #fff;
+    width: 13%;
+    padding: 10px;
+    font-size: 16px;
+}
+#btnMainSubmit {
+    background: #60BB47;
+    color: #fff;
+    width: 13%;
+    padding: 12px;
+    font-size: 16px;
+}
+.optionType, .optAmuDiv {
+    width: 34%; 
+    display: inline;
+}
+.amountProp {
+    margin-bottom: 15px;
+}
+.optAmuDiv {
+    width: 50%;
+    display: inline;
+    margin-left: 15px;
+}
+.optAmuDiv {
+    display: none;
+}
+.optionFieldsWrapper, .edit_optionFieldsWrapper{
+    width: 80%;
+    margin: 0px auto;
+    margin-top: 35px;
+    border: 1px solid #ccc;
+    padding: 15px;
+}
+.optionFieldsWrapper {
+    display: none;
+}
+.optionFieldsWrapper h4 {
+    display: inline;
+}
+.optionFieldsWrapper input, .edit_optionFieldsWrapper input {
+    margin-top: 5px;
+    display: inline-block;
+    width: 90%;
+}
+.add-block-edit {
+    width: 17%;
+}
+.optionFieldsWrapper .glyphicon-remove {
+    margin-left: 2px;
+    position: absolute;
+    top: 15px;
+    right: 75px;
+}
+.optionInputWrapper {
+    position: relative; 
+}
+.optionFieldsWrapper .btn-info {
+    border: none;
+    margin-left: 15px;
+    margin-top: -6px;
+} 
+#addBlock {
+    margin-top: 15px;
+}
+.from_create {
+    margin-bottom: 10px;
+}
+#btnMainSubmit {
+    display: none;
+}
+.alert {
+    display: none;
+}
+#activeStatus, #edit_activeStatus {
+    margin-bottom: 10px;
+}
+.table-fixed thead {
+    width: 97%;
+}
+.table-fixed tbody {
+    height: 230px;
+    overflow-y: auto;
+    width: 100%;
+}
+.table-fixed thead, .table-fixed tbody, .table-fixed tr, .table-fixed td, .table-fixed th {
+    display: block;
+}
+.table-fixed tbody td, .table-fixed thead > tr> th {
+    float: left;
+    border-bottom-width: 0;
+}
