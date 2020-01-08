@@ -1,13 +1,15 @@
+// Inital Variable Declare Related In Global Scope
 const addBlock    = document.getElementById('addBlock')
 const formWrapper = document.getElementById('formWrapper')
+var optAmtIndex;
 
 if(addBlock != undefined) {
     addBlock.addEventListener('submit', createBlock)
 }
 
+// event delegation event Listner
 document.addEventListener('change', enableAmountField)
-
-
+document.addEventListener('click',generateOptionsFieldOnClick)
 
 /** 
  * 
@@ -42,7 +44,11 @@ function createBlock(e) {
     `
     formWrapper.appendChild(newBox);
 }
-var optAmtIndex;
+
+function removeOptionElm(el) {
+    el.closest('.optionInputWrapper').remove()
+}
+
 function enableAmountField(e) {
     if(e.target && e.target.className == 'form-control optionType') {
         optAmtIndex = e.target.value.split('_')[1]
@@ -53,18 +59,14 @@ function enableAmountField(e) {
         if(optTyp != '' && e.target.value.split('_')[0] != 'btntextField' && e.target.value.split('_')[0] != 'btnFile') {
             enableOptionDiv()
         }else {
-            //clearOptionsDiv(optAmtIndex)
+            clearOptionsDiv(optAmtIndex)
         }
     }
 }
 
 function enableOptionDiv() {
-    console.log(optAmtIndex)
     var optionFieldsWrapper = document.getElementsByClassName('optionFieldsWrapper')[optAmtIndex]
-    console.log(optionFieldsWrapper)
-    let optionType          = document.getElementsByClassName('optionType')
-    
-    let optTyp              = $( ".optionType option:selected" ).val()
+    let optTyp              = $(".optionType option:selected").val()
     
     optionFieldsWrapper.innerHTML = '';
     if(optTyp != '') {
@@ -81,24 +83,16 @@ function generateOptionsField(opName) {
     return optionsField
 }
 
-// function enableOptionDiv() {
-//     var optionFieldsWrapper = document.getElementsByClassName('optionFieldsWrapper')[optAmtIndex]
-//     let optionType          = document.getElementsByClassName('optionType')[optAmtIndex]
-//     let optTyp              = optionType.options[optionType.selectedIndex].value
-    
-//     optionFieldsWrapper.innerHTML = '';
-//     if(optTyp != '') {
-//         var generateHtml = generateOptionsField(optAmtIndex)
-//         optionFieldsWrapper.style.display = 'block'
-//         optionFieldsWrapper.innerHTML += '<h4>Options List </h4>'
-//         optionFieldsWrapper.innerHTML += '<a class="btn btn-info insertRow" id="'+optAmtIndex+'">Add Row</a>'
-//         optionFieldsWrapper.innerHTML += generateHtml
-//     }
-// }
-
-function removeOptionElm(el) {
-    el.closest('.optionInputWrapper').remove()
+function generateOptionsFieldOnClick(e) {
+    if(e.target && e.target.className == 'btn btn-info insertRow') {
+        let id = e.target.id
+        var optionFieldsWrapper = document.getElementsByClassName('optionFieldsWrapper')[id] 
+        optionFieldsWrapper.insertAdjacentHTML("beforeend", '<div class="optionInputWrapper"><input type="text" class="form-control" name="question_'+id+'" value="" required/><span class="glyphicon glyphicon-remove" aria-hidden="true" onclick="removeOptionElm(this)"></span></div>')
+    }
 }
-// function removeQueBlockElm(el) {
-//     el.closest('.inputBlock').remove()
-// }
+
+function clearOptionsDiv(id) {
+    var optionFieldsWrapper = document.getElementsByClassName('optionFieldsWrapper')[id]
+    optionFieldsWrapper.style.display = 'none'
+    optionFieldsWrapper.innerHTML = ''
+}

@@ -52,7 +52,7 @@ function getFormData() {
             }
         },
         error: function(error) {
-            alertControl('block','Data Inserte Failed!','alert-danger')
+            alertControl('block','Something Went Wrong!','alert-danger')
         }
     });
 }
@@ -137,6 +137,7 @@ $('#edit-modal').on('show.bs.modal', function(e) {
                         }else{
                             var optField = document.createElement("div");
                             optField.className = "optionFieldsWrapper";
+                            newBox.appendChild(optField);
                         }
                     }  
                 }); // End Of Foreach
@@ -234,3 +235,4 @@ $('#btnDelete').on('click', function (e) {
     });
     
 });
+
