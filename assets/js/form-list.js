@@ -70,25 +70,25 @@ $('#edit-modal').on('show.bs.modal', function(e) {
             let showData = document.getElementById('formWrapper');
             showData.innerHTML = '';
             let item = res.data[id];
-
             if(res.status == 200) {
+                document.getElementById('form_id').value = item.form_id
                 showData.innerHTML += `
                     <div class="editFormName">
                         <label>Name: </label>
-                        <input type="text" class="form-control" value="${item.form_name}" id="edit_form_name" required>
+                        <input type="text" class="form-control" value="${item.form_name}" id="form_name" required>
                     </div>
                     <label>Choose Form Type: </label>
-                    <select class="form-control" id="edit_formType" required>
+                    <select class="form-control" id="formType" required>
                         <option value="">Select One</option>
                         <option value="service">Service</option>
                         <option value="survey">Survey</option>
                     </select>
                     <div class="amountProp">
                         <label>Amount: </label>
-                        <input type="text" class="form-control" value="${item.pay_amount}" id="edit_amount"/>
+                        <input type="text" class="form-control" value="${item.pay_amount}" id="amount"/>
                     </div>
                     <label>Choose Form Status: </label>
-                    <select class="form-control" id="edit_activeStatus" required>
+                    <select class="form-control" id="activeStatus" required>
                         <option value="">Select One</option>
                         <option value="1">Publish</option>
                         <option value="2">Pending</option>
@@ -108,6 +108,7 @@ $('#edit-modal').on('show.bs.modal', function(e) {
                             <label>Label </label>
                             <input type="text" class="form-control" name="question_${splitKey[1]}" value="${item[key].input_label}" required="">
                             <input type="hidden" class="question_id" value="question_${splitKey[1]}">
+                            <span style="display:none" class="d_id">${item[key].que_id}</span>
                             <div class="optDefineDiv">
                                 <label>Select option Type</label>
                                 <select name="" class="form-control optionType" id="editOpTyp_${splitKey[1]}" required="">
@@ -126,12 +127,13 @@ $('#edit-modal').on('show.bs.modal', function(e) {
                             var optField = document.createElement("div");
                             optField.className = "optionFieldsWrapper";
                             optField.style.display = 'block'
+                            optField.innerHTML += ''
                             optField.innerHTML += '<h4>Options List </h4>'
                             optField.innerHTML += '<a class="btn btn-info insertRow" id="'+splitKey[1]+'">Add Row</a>'
                             let c = 0;
                             item[key].options.forEach(element => {
                                 c++
-                                optionFieldMaker(optField,c,splitKey[1], element)
+                                optionFieldMaker(optField,c,splitKey[1], element.option_name, element.option_id)
                             });
                             newBox.appendChild(optField);
                         }else{
@@ -142,8 +144,8 @@ $('#edit-modal').on('show.bs.modal', function(e) {
                     }  
                 }); // End Of Foreach
                 
-                $("#edit_formType").val(item.form_type);
-                $("#edit_activeStatus").val(item.active_status);
+                $("#formType").val(item.form_type);
+                $("#activeStatus").val(item.active_status);
             }
         },
         error: function(error) {
@@ -160,11 +162,12 @@ $('#edit-modal').on('show.bs.modal', function(e) {
  * 
 */
 
-function optionFieldMaker(wraper, c, index, elm) {
+function optionFieldMaker(wraper, c, index, elm, optId) {
     if(c == 1) {
         wraper.innerHTML += `
             <div class="optionInputWrapper">
                 <input type="text" class="form-control" name="question_${index}" value="${elm}" required="">
+                <span style="display:none" class="opt_id">${optId}</span>
             </div>
         `
     }else{
@@ -172,10 +175,13 @@ function optionFieldMaker(wraper, c, index, elm) {
             <div class="optionInputWrapper">
                 <input type="text" class="form-control" name="question_${index}" value="${elm}" required="">
                 <span class="glyphicon glyphicon-remove" aria-hidden="true" onclick="removeOptionElm(this)"></span>
+                <span style="display:none" class="opt_id">${optId}</span>
             </div>
         `
     }
 }
+
+
 $('#btnUpdate').on('click', function (e) {
     e.preventDefault();
     
@@ -203,6 +209,7 @@ $('#btnUpdate').on('click', function (e) {
     });
 
 })
+
 
 //delete 
 $('#delete-modal').on('show.bs.modal', function(e) {
@@ -236,3 +243,68 @@ $('#btnDelete').on('click', function (e) {
     
 });
 
+const formBuilder = document.getElementById('updateFormBuilder')
+document.addEventListener('submit', sendForm)
+function sendForm(e) {
+    if(e.target && e.target.id == 'updateFormBuilder') {
+        e.preventDefault();
+
+        var updateFormBuilder = document.forms["updateFormBuilder"]
+ 
+        var data = getInput(updateFormBuilder)
+        let apiurl = apiDomain+'updateFormById';
+        $.ajax({
+            url: apiurl,
+            method: 'post',
+            type: "POST",
+            data: {'data':data},
+            success: function(result) {
+                alertControl('block','Data Updated Successfuly!','alert-success')
+                $('#edit-modal').modal('hide');
+            },
+            error: function(error) {
+                alertControl('block','Data Updated Failed!','alert-danger')
+            }
+        });
+    }
+}
+
+function getInput() {
+    let formId = document.getElementById('form_id').value;
+    let formName = document.getElementById('form_name').value;
+    formBox = formBuilder.getElementsByClassName('inputBlock');
+    let formType = document.getElementById("formType").value;
+    let activeStatus = document.getElementById("activeStatus").value;
+    let userId = document.getElementById("user_id").value;
+    let amount = document.getElementById("amount").value;
+    
+    var fieldArr = {
+        'form_id':formId,
+        'form_name': formName,
+        'form_type': formType,
+        'user_id': userId,
+        'amount': amount,
+        'active_status':activeStatus,
+        'fields': {}
+    }
+    for (let j = 0; j < formBox.length; j++) {
+        fieldArr.fields['field_'+j] = {
+            'que_type': formBox[j].querySelector('.optionType').options[formBox[j].querySelector('.optionType').selectedIndex].value.split('_')[0],
+            'question': formBox[j].querySelector('input[name=question_'+j+']').value,
+            'que_id': formBox[j].querySelector('.d_id').innerHTML,
+            'options': {}
+        }
+        var optionDivLen = formBox[j].querySelector('.optionFieldsWrapper').getElementsByClassName('form-control') 
+        var optionId = formBox[j].querySelector('.optionFieldsWrapper').getElementsByClassName('opt_id')   
+        if(optionDivLen.length > 0) {
+            for (let i = 0; i < optionDivLen.length; i++) {
+                fieldArr.fields['field_'+j].options[i] = {
+                    'option_title' : optionDivLen[i].value,
+                    'option_id': optionId[i].innerHTML
+                }
+            }
+        }
+    }
+
+    return fieldArr
+}

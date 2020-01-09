@@ -57,15 +57,16 @@
                             <h4 class="modal-title">Edit</h4>
                         </div>
                         <div class="modal-body">
-                            <form enctype="multipart/form-data">
+                            <form method="post" id="updateFormBuilder">
                                 <input type="hidden" class="form-control" id="user_id" name="user_id" value="380">
+                                <input type="hidden" class="form-control" id="form_id" name="form_id" value="">
                                 <div id="formWrapper">
 
                                     
                                 </div>
-                                <input type="submit" class="btn btn-default" value="Submit" id="btnMainSubmit"/>
+                                <input type="submit" class="btn btn-primary pull-right" value="Update" id="btnUpdateSubmit"/>
                             </form>
-                            <div class="from_create text-right">
+                            <div class="from_create text-left">
                                 <form method="post" id="addBlock">
                                     <input type="submit" class="btn-add-block add-block-edit" value="Add Block"/>
                                 </form>
@@ -73,7 +74,6 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" id="btnUpdate">Update</button>
                         </div>
                     </div>
                 </div>
