@@ -48,7 +48,7 @@ function getFormData() {
                     `
                 });
             }else{
-                formListElm.innerHTML += "<tr style='background-color:#fff'><td class=''></td><td class=''></td><td class='col-xs-1'>No Data To Show</td></tr>";
+                formListElm.innerHTML += "<h2>No Data To Show</h2>";
             }
         },
         error: function(error) {
@@ -182,35 +182,6 @@ function optionFieldMaker(wraper, c, index, elm, optId) {
 }
 
 
-$('#btnUpdate').on('click', function (e) {
-    e.preventDefault();
-    
-    let user_id = $('#user_id').val();
-        device_type = $('#editDisplayType option:selected').val();
-        status = $('#update_status option:selected').val()
-        img_url = $('#updated_img_url').attr("src")
-        updated_slider_id = $('#updated_slider_id').val();
-        data = {'updated_slider_id':updated_slider_id,'user_id':user_id,'device_type':device_type, 'status': status, 'img_url':img_url}
-        apiurl = apiDomain+'updateSlider/'
-
-    $.ajax({
-        url: apiurl,
-        method: 'post',
-        type: "POST",
-        data: {'data':data},
-        success: function(result) {
-            alertControl('block','Slider Updated Successfuly!','alert-success')
-            $('#edit-modal').modal('hide');
-            fetchSliderData();
-        },
-        error: function(error) {
-            alertControl('block','Slider Updated Failed!','alert-danger')
-        }
-    });
-
-})
-
-
 //delete 
 $('#delete-modal').on('show.bs.modal', function(e) {
     var id = e.relatedTarget.id;
@@ -288,19 +259,21 @@ function getInput() {
         'fields': {}
     }
     for (let j = 0; j < formBox.length; j++) {
+        let que_id = formBox[j].querySelector('.d_id') != undefined ? formBox[j].querySelector('.d_id').innerHTML : null; 
         fieldArr.fields['field_'+j] = {
             'que_type': formBox[j].querySelector('.optionType').options[formBox[j].querySelector('.optionType').selectedIndex].value.split('_')[0],
             'question': formBox[j].querySelector('input[name=question_'+j+']').value,
-            'que_id': formBox[j].querySelector('.d_id').innerHTML,
+            'que_id': que_id,
             'options': {}
         }
         var optionDivLen = formBox[j].querySelector('.optionFieldsWrapper').getElementsByClassName('form-control') 
         var optionId = formBox[j].querySelector('.optionFieldsWrapper').getElementsByClassName('opt_id')   
         if(optionDivLen.length > 0) {
             for (let i = 0; i < optionDivLen.length; i++) {
+                let opId = optionId[i] != undefined ? optionId[i].innerHTML : null
                 fieldArr.fields['field_'+j].options[i] = {
                     'option_title' : optionDivLen[i].value,
-                    'option_id': optionId[i].innerHTML
+                    'option_id': opId
                 }
             }
         }

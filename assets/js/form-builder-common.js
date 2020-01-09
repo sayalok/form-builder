@@ -20,7 +20,9 @@ document.addEventListener('click',generateOptionsFieldOnClick)
 function createBlock(e) {
     e.preventDefault();
     let inputBlockLength = formWrapper.getElementsByClassName('inputBlock').length
-    document.getElementById('btnMainSubmit').style.display = 'block'
+    if(document.getElementById('btnMainSubmit') != undefined) {
+        document.getElementById('btnMainSubmit').style.display = 'block'
+    }
     var newBox = document.createElement("div");
     newBox.className = "form-group inputBlock";
     newBox.innerHTML = `
