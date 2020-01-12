@@ -41,7 +41,7 @@ class FormBuilder extends CI_Controller {
                     foreach($result as $key => $val) {
                         if(is_array($val)) {
                             foreach($val as $innerRow) {
-                                $qsql = "INSERT INTO questions (form_id, que_type, question,created_by) values(";
+                                $qsql = "INSERT INTO questions (form_id, que_type, question,created_by,que_status) values(";
                                 $qsql .= "".$formId.",";
     
                                 $valuesArrs = [];
@@ -55,14 +55,14 @@ class FormBuilder extends CI_Controller {
                                         array_push($valuesArrs,$fldarr);
                                     }
                                 }
-                                $qsql .= "".$result['user_id'].")";
+                                $qsql .= "".$result['user_id'].",1)";
                                 $res = $dbCon->query($qsql);
     
                                 if($options) {
                                     $qid = $this->findRowId($dbCon, 'qid', 'questions');
                                     foreach($valuesArrs as $valuesArr) {
                                         foreach($valuesArr as $v) {
-                                            $osql = "INSERT INTO questions_option (question_id, que_option)  VALUES (".$qid.",'".$v."')";
+                                            $osql = "INSERT INTO questions_option (question_id, que_option,opt_status)  VALUES (".$qid.",'".$v."',1)";
                                             $res = $dbCon->query($osql);
                                         }
                                     }
@@ -100,7 +100,7 @@ class FormBuilder extends CI_Controller {
                 $token = md5(date("Y-m-d"));
                 if($getToken === $token) {
                     $dbCon = $this->load->database($this->dbName, TRUE);
-                    $sql = $dbCon->query("SELECT form_id, name, form_type, pay_amount, active_status, qid, que_type, question, optid, que_option FROM form LEFT JOIN questions ON questions.form_id = form.id LEFT JOIN questions_option ON questions_option.question_id = questions.qid  WHERE form.active_status != 0 ORDER BY qid");
+                    $sql = $dbCon->query("SELECT form_id, name, form_type, pay_amount, active_status, qid, que_type, question, optid, que_option FROM form LEFT JOIN questions ON questions.form_id = form.id LEFT JOIN questions_option ON questions_option.question_id = questions.qid WHERE form.active_status != 0 AND questions.que_status > 0 AND ( questions_option.opt_status > 0 OR questions_option.opt_status IS NULL ) ORDER BY qid");
                     $result = json_decode(json_encode($sql->result()),TRUE);
                     if(!empty($result)) {
                         $newAr = $this->processData($result);
@@ -392,7 +392,8 @@ class FormBuilder extends CI_Controller {
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id = $_POST['data'];
             $dbCon = $this->load->database($this->dbName, TRUE);
-            $res = $dbCon->query("SELECT form_id, name, form_type, pay_amount, active_status, qid, que_type, question, optid, que_option FROM form LEFT JOIN questions ON questions.form_id = form.id LEFT JOIN questions_option ON questions_option.question_id = questions.qid WHERE form.active_status != 0 AND form.id =".$id." ORDER BY questions.qid");
+//            $res = $dbCon->query("SELECT form_id, name, form_type, pay_amount, active_status, qid, que_type, question, optid, que_option FROM form LEFT JOIN questions ON questions.form_id = form.id LEFT JOIN questions_option ON questions_option.question_id = questions.qid WHERE form.active_status != 0 AND form.id =".$id." ORDER BY questions.qid");
+            $res = $dbCon->query("SELECT form_id, name, form_type, pay_amount, active_status, qid, que_type, question, optid, que_option FROM form LEFT JOIN questions ON questions.form_id = form.id LEFT JOIN questions_option ON questions_option.question_id = questions.qid WHERE form.id = ".$id." AND form.active_status != 0 AND questions.que_status > 0 AND ( questions_option.opt_status > 0 OR questions_option.opt_status IS NULL ) ORDER BY qid");
             $result = json_decode(json_encode($res->result()),TRUE);
             if(!empty($result)) {
                 $newAr = $this->processData($result);

@@ -174,7 +174,7 @@ function optionFieldMaker(wraper, c, index, elm, qId, optId) {
         wraper.innerHTML += `
             <div class="optionInputWrapper">
                 <input type="text" class="form-control" name="question_${index}" value="${elm}" required="">
-                <span class="glyphicon glyphicon-remove" aria-hidden="true" onclick="removeOptionElm(this,${optId}, ${qId})"></span>
+                <span class="glyphicon glyphicon-remove" aria-hidden="true" onclick="removeOptionElm(this,${qId},${optId})"></span>
                 <span style="display:none" class="opt_id">${optId}</span>
             </div>
         `
@@ -282,7 +282,47 @@ function getInput() {
     return fieldArr
 }
 
-function removeOptionElm(el,id, qid) {
-    console.log(id, qid)
+function removeOptionElm(el,qid,id) {
+    // let storeData = JSON.parse(localStorage.getItem(qid));
+
+    // let storeVal = [];
+    // if(storeData != null) {
+    //     storeData.push(id)
+    //     localStorage.setItem(qid, JSON.stringify(storeData));
+    // }else{
+    //     storeVal.push(id)
+    //     localStorage.setItem(qid, JSON.stringify(storeVal)); 
+    // }
     // el.closest('.optionInputWrapper').remove()
+
+
+
+    let storeData = JSON.parse(localStorage.getItem("optionList"));
+    console.log(storeData)
+    //var jsonStr = '{"theTeam":[]}';
+    var mainStorage = '{"optionList" : []}'
+    var mainStoragePrse = JSON.parse(mainStorage);
+    console.log(storeData['optionList'][0])
+    if(storeData == null) {
+        mainStoragePrse['optionList'].push({ [qid]: [id] })
+        localStorage.setItem("optionList",JSON.stringify(mainStoragePrse)); 
+    }else{
+        if(storeData['optionList'].hasOwnProperty(qid) ) {
+            console.log('here')
+        }else{
+            storeData['optionList'].push({ [qid]: [id] })
+            localStorage.setItem("optionList",JSON.stringify(storeData)); 
+        }
+    }
 }
+
+document.addEventListener('click', clearStrroage)
+
+function clearStrroage(e) {
+    if(e.target && e.target.id == 'btnCloseEdit') {
+        localStorage.clear();
+    }
+}
+// if (window.performance) {
+//     localStorage.clear();
+// }
