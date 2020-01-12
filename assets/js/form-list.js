@@ -297,21 +297,43 @@ function removeOptionElm(el,qid,id) {
 
 
 
+    // let storeData = JSON.parse(localStorage.getItem("optionList"));
+    // console.log(storeData)
+    // //var jsonStr = '{"theTeam":[]}';
+    // var mainStorage = '{"optionList" : []}'
+    // var mainStoragePrse = JSON.parse(mainStorage);
+    // console.log(storeData['optionList'][0])
+    // if(storeData == null) {
+    //     mainStoragePrse['optionList'].push({ [qid]: [id] })
+    //     localStorage.setItem("optionList",JSON.stringify(mainStoragePrse)); 
+    // }else{
+    //     if(storeData['optionList'].hasOwnProperty(qid) ) {
+    //         console.log('here')
+    //     }else{
+    //         storeData['optionList'].push({ [qid]: [id] })
+    //         localStorage.setItem("optionList",JSON.stringify(storeData)); 
+    //     }
+    // }
     let storeData = JSON.parse(localStorage.getItem("optionList"));
-    console.log(storeData)
-    //var jsonStr = '{"theTeam":[]}';
     var mainStorage = '{"optionList" : []}'
     var mainStoragePrse = JSON.parse(mainStorage);
-    console.log(storeData['optionList'][0])
+
     if(storeData == null) {
         mainStoragePrse['optionList'].push({ [qid]: [id] })
         localStorage.setItem("optionList",JSON.stringify(mainStoragePrse)); 
     }else{
-        if(storeData['optionList'].hasOwnProperty(qid) ) {
-            console.log('here')
-        }else{
-            storeData['optionList'].push({ [qid]: [id] })
-            localStorage.setItem("optionList",JSON.stringify(storeData)); 
+        console.log('oi')
+        for (var i = 0; i < storeData['optionList'].length; i++) {
+            if(Object.keys(storeData['optionList'][i])[0] == qid) {
+                console.log('if')
+                storeData['optionList'][i][qid].push(id)
+                localStorage.setItem("optionList",JSON.stringify(storeData));
+            }else{
+                console.log('else')
+                storeData['optionList'].push({ [qid]: [id] })
+                localStorage.setItem("optionList",JSON.stringify(storeData));
+            }
+            return
         }
     }
 }
