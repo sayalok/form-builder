@@ -47,10 +47,6 @@ function createBlock(e) {
     formWrapper.appendChild(newBox);
 }
 
-function removeOptionElm(el) {
-    el.closest('.optionInputWrapper').remove()
-}
-
 function enableAmountField(e) {
     if(e.target && e.target.className == 'form-control optionType') {
         optAmtIndex = e.target.value.split('_')[1]

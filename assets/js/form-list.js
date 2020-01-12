@@ -133,7 +133,7 @@ $('#edit-modal').on('show.bs.modal', function(e) {
                             let c = 0;
                             item[key].options.forEach(element => {
                                 c++
-                                optionFieldMaker(optField,c,splitKey[1], element.option_name, element.option_id)
+                                optionFieldMaker(optField,c,splitKey[1], element.option_name, item[key].que_id, element.option_id)
                             });
                             newBox.appendChild(optField);
                         }else{
@@ -162,7 +162,7 @@ $('#edit-modal').on('show.bs.modal', function(e) {
  * 
 */
 
-function optionFieldMaker(wraper, c, index, elm, optId) {
+function optionFieldMaker(wraper, c, index, elm, qId, optId) {
     if(c == 1) {
         wraper.innerHTML += `
             <div class="optionInputWrapper">
@@ -174,7 +174,7 @@ function optionFieldMaker(wraper, c, index, elm, optId) {
         wraper.innerHTML += `
             <div class="optionInputWrapper">
                 <input type="text" class="form-control" name="question_${index}" value="${elm}" required="">
-                <span class="glyphicon glyphicon-remove" aria-hidden="true" onclick="removeOptionElm(this)"></span>
+                <span class="glyphicon glyphicon-remove" aria-hidden="true" onclick="removeOptionElm(this,${optId}, ${qId})"></span>
                 <span style="display:none" class="opt_id">${optId}</span>
             </div>
         `
@@ -280,4 +280,9 @@ function getInput() {
     }
 
     return fieldArr
+}
+
+function removeOptionElm(el,id, qid) {
+    console.log(id, qid)
+    // el.closest('.optionInputWrapper').remove()
 }

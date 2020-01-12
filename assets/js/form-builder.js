@@ -139,9 +139,9 @@ function sendForm(e) {
 //     }
 // }
 
-// function removeOptionElm(el) {
-//     el.closest('.optionInputWrapper').remove()
-// }
+function removeOptionElm(el) {
+    el.closest('.optionInputWrapper').remove()
+}
 
 // function generateOptionsField(opName) {
 //     var optionsField = '<div class="optionInputWrapper"><input type="text" class="form-control" name="question_'+opName+'" value="" required/></div>'
