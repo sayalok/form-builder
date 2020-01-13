@@ -444,6 +444,7 @@ class FormBuilder extends CI_Controller {
         $response = [];
         if($_SERVER['REQUEST_METHOD'] == 'POST') { 
             $result = $_POST['data'];
+            $deleteOptRes = $_POST['deleteOpt'];
             $dbCon = $this->load->database($this->dbName, TRUE);
             if(!empty($result)) {
                 if($result['form_name'] != '' && $result['form_type'] != '') {
@@ -532,6 +533,15 @@ class FormBuilder extends CI_Controller {
                 }else{
                     $response['status'] = 500;
                     $response['message'] = "Something Went Wrong !";
+                }
+
+                if(!empty($deleteOptRes)) {
+                    foreach($deleteOptRes['optionList'] as $options) {
+                        foreach($options as $key => $val) {
+                            $dosql = "UPDATE questions_option SET opt_status = 0 WHERE optid = ".$val."";
+                            $res = $dbCon->query($dosql);
+                        }
+                    }
                 }
             }else {
                 $response['status'] = 500;

@@ -219,7 +219,7 @@ document.addEventListener('submit', sendForm)
 function sendForm(e) {
     if(e.target && e.target.id == 'updateFormBuilder') {
         e.preventDefault();
-
+        let storeOptData = JSON.parse(localStorage.getItem("optionList"));
         var updateFormBuilder = document.forms["updateFormBuilder"]
  
         var data = getInput(updateFormBuilder)
@@ -228,10 +228,11 @@ function sendForm(e) {
             url: apiurl,
             method: 'post',
             type: "POST",
-            data: {'data':data},
+            data: {'data':data, 'deleteOpt': storeOptData},
             success: function(result) {
                 alertControl('block','Data Updated Successfuly!','alert-success')
                 $('#edit-modal').modal('hide');
+                localStorage.removeItem('optionList');
             },
             error: function(error) {
                 alertControl('block','Data Updated Failed!','alert-danger')
@@ -283,58 +284,35 @@ function getInput() {
 }
 
 function removeOptionElm(el,qid,id) {
-    // let storeData = JSON.parse(localStorage.getItem(qid));
-
-    // let storeVal = [];
-    // if(storeData != null) {
-    //     storeData.push(id)
-    //     localStorage.setItem(qid, JSON.stringify(storeData));
-    // }else{
-    //     storeVal.push(id)
-    //     localStorage.setItem(qid, JSON.stringify(storeVal)); 
-    // }
-    // el.closest('.optionInputWrapper').remove()
-
-
-
-    // let storeData = JSON.parse(localStorage.getItem("optionList"));
-    // console.log(storeData)
-    // //var jsonStr = '{"theTeam":[]}';
-    // var mainStorage = '{"optionList" : []}'
-    // var mainStoragePrse = JSON.parse(mainStorage);
-    // console.log(storeData['optionList'][0])
-    // if(storeData == null) {
-    //     mainStoragePrse['optionList'].push({ [qid]: [id] })
-    //     localStorage.setItem("optionList",JSON.stringify(mainStoragePrse)); 
-    // }else{
-    //     if(storeData['optionList'].hasOwnProperty(qid) ) {
-    //         console.log('here')
-    //     }else{
-    //         storeData['optionList'].push({ [qid]: [id] })
-    //         localStorage.setItem("optionList",JSON.stringify(storeData)); 
-    //     }
-    // }
     let storeData = JSON.parse(localStorage.getItem("optionList"));
     var mainStorage = '{"optionList" : []}'
     var mainStoragePrse = JSON.parse(mainStorage);
 
     if(storeData == null) {
-        mainStoragePrse['optionList'].push({ [qid]: [id] })
-        localStorage.setItem("optionList",JSON.stringify(mainStoragePrse)); 
+        mainStoragePrse['optionList'].push({ [qid]: id })
+        localStorage.setItem("optionList",JSON.stringify(mainStoragePrse));
+        el.closest('.optionInputWrapper').remove()
     }else{
-        console.log('oi')
-        for (var i = 0; i < storeData['optionList'].length; i++) {
-            if(Object.keys(storeData['optionList'][i])[0] == qid) {
-                console.log('if')
-                storeData['optionList'][i][qid].push(id)
-                localStorage.setItem("optionList",JSON.stringify(storeData));
-            }else{
-                console.log('else')
-                storeData['optionList'].push({ [qid]: [id] })
-                localStorage.setItem("optionList",JSON.stringify(storeData));
-            }
-            return
-        }
+        // for (var i = 0; i <= storeData['optionList'].length; i++) {
+        //     console.log(Object.keys(storeData['optionList'][i])[0])
+        //     if(Object.keys(storeData['optionList'][i])[0] == qid) {
+        //         console.log('if')
+        //         storeData['optionList'][i][qid].push(id)
+        //         // localStorage.setItem("optionList",JSON.stringify(storeData));
+        //         // el.closest('.optionInputWrapper').remove()
+        //         //break
+        //     }else{
+        //         console.log('else')
+        //         storeData['optionList'].push({ [qid]: [id] })
+        //         // localStorage.setItem("optionList",JSON.stringify(storeData));
+        //         // el.closest('.optionInputWrapper').remove()
+        //         //break
+        //     }
+        //     localStorage.setItem("optionList",JSON.stringify(storeData));
+        // }
+        storeData['optionList'].push({ [qid]: id })
+        localStorage.setItem("optionList",JSON.stringify(storeData));
+        el.closest('.optionInputWrapper').remove()
     }
 }
 
@@ -342,9 +320,9 @@ document.addEventListener('click', clearStrroage)
 
 function clearStrroage(e) {
     if(e.target && e.target.id == 'btnCloseEdit') {
-        localStorage.clear();
+        localStorage.removeItem('optionList');
     }
 }
-// if (window.performance) {
-//     localStorage.clear();
-// }
+if (window.performance) {
+    localStorage.clear();
+}
