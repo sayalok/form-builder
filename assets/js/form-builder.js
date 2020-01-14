@@ -51,15 +51,6 @@ document.addEventListener('click',generateOptionsFieldOnClick)
 //     formWrapper.appendChild(newBox);
 // }
 
-function alertControl(sts, msg, clsName) {
-    let alertDiv = document.getElementById('alert');
-    alertDiv.style.display = sts;
-    alertDiv.innerHTML = msg;
-    alertDiv.classList.add(clsName)
-
-    setTimeout(function() {alertDiv.style.display = 'none'},3000)
-}
-
 function sendForm(e) {
     if(e.target && e.target.id == 'formBuilder') {
         e.preventDefault();
@@ -108,8 +99,6 @@ function generateOptionsField(opName) {
     return optionsField
 }
 
-
-// Helper Functions Starts Here
 function clearOptionsDiv(id) {
     var optionFieldsWrapper = document.querySelector('#optionFieldsWrapper_'+id)
     optionFieldsWrapper.style.display = 'none'

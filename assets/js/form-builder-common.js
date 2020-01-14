@@ -10,7 +10,6 @@ if(addBlock != undefined) {
 
 // event delegation event Listner
 document.addEventListener('change', enableAmountField)
-//document.addEventListener('click',generateOptionsFieldOnClick)
 
 /** 
  * 
@@ -94,5 +93,12 @@ function enableAmountField(e) {
 //     optionFieldsWrapper.style.display = 'none'
 //     optionFieldsWrapper.innerHTML = ''
 // }
+function alertControl(sts, msg, clsName) {
+    let alertDiv = document.getElementById('alert');
+    alertDiv.style.display = sts;
+    alertDiv.innerHTML = msg;
+    alertDiv.classList.add(clsName)
 
+    setTimeout(function() {alertDiv.style.display = 'none'},3000)
+}
 $("#inputWrapper").sortable();

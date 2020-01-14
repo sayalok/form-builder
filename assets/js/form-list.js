@@ -9,14 +9,6 @@ if(environment == 'production') {
 
 getFormData();
 
-function alertControl(sts, msg, clsName) {
-    let alertDiv = document.getElementById('alert');
-    alertDiv.style.display = sts;
-    alertDiv.innerHTML = msg;
-    alertDiv.classList.add(clsName)
-
-    setTimeout(function() {alertDiv.style.display = 'none'},3000)
-}
 
 function getFormData() {
     let apiurl = apiDomain+'getFormList';
@@ -153,34 +145,6 @@ $('#edit-modal').on('show.bs.modal', function(e) {
     });
 })
 
-
-/** 
- * 
- * Generating Option Fields
- * set a counter (c) to check the first option field which can not be deleted 
- * 
-*/
-
-function optionFieldMaker(wraper, c, index, elm, qId, optId) {
-    if(c == 1) {
-        wraper.innerHTML += `
-            <div class="optionInputWrapper">
-                <input type="text" class="form-control" name="question_${index}" value="${elm}" required="">
-                <span style="display:none" class="opt_id">${optId}</span>
-            </div>
-        `
-    }else{
-        wraper.innerHTML += `
-            <div class="optionInputWrapper">
-                <input type="text" class="form-control" name="question_${index}" value="${elm}" required="">
-                <span class="glyphicon glyphicon-remove" aria-hidden="true" onclick="removeOptionElm(this,${qId},${optId})"></span>
-                <span style="display:none" class="opt_id">${optId}</span>
-            </div>
-        `
-    }
-}
-
-
 //delete 
 $('#delete-modal').on('show.bs.modal', function(e) {
     var id = e.relatedTarget.id;
@@ -213,6 +177,7 @@ $('#btnDelete').on('click', function (e) {
     
 });
 
+//update
 const formBuilder = document.getElementById('updateFormBuilder')
 document.addEventListener('submit', sendForm)
 function sendForm(e) {
@@ -282,7 +247,16 @@ function getInput() {
     return fieldArr
 }
 
+
+/**  
+ * This function will remove the option which is click and store the option id and question id on localstroage
+*/
 function removeOptionElm(el,qid,id) {
+    localStorageStore(qid,id)
+    el.closest('.optionInputWrapper').remove()
+}
+
+function localStorageStore(qid,id) {
     let storeData = JSON.parse(localStorage.getItem("optionList"));
     var mainStorage = '{"optionList" : []}'
     var mainStoragePrse = JSON.parse(mainStorage);
@@ -290,28 +264,9 @@ function removeOptionElm(el,qid,id) {
     if(storeData == null) {
         mainStoragePrse['optionList'].push({ [qid]: id })
         localStorage.setItem("optionList",JSON.stringify(mainStoragePrse));
-        el.closest('.optionInputWrapper').remove()
     }else{
-        // for (var i = 0; i <= storeData['optionList'].length; i++) {
-        //     console.log(Object.keys(storeData['optionList'][i])[0])
-        //     if(Object.keys(storeData['optionList'][i])[0] == qid) {
-        //         console.log('if')
-        //         storeData['optionList'][i][qid].push(id)
-        //         // localStorage.setItem("optionList",JSON.stringify(storeData));
-        //         // el.closest('.optionInputWrapper').remove()
-        //         //break
-        //     }else{
-        //         console.log('else')
-        //         storeData['optionList'].push({ [qid]: [id] })
-        //         // localStorage.setItem("optionList",JSON.stringify(storeData));
-        //         // el.closest('.optionInputWrapper').remove()
-        //         //break
-        //     }
-        //     localStorage.setItem("optionList",JSON.stringify(storeData));
-        // }
         storeData['optionList'].push({ [qid]: id })
         localStorage.setItem("optionList",JSON.stringify(storeData));
-        el.closest('.optionInputWrapper').remove()
     }
 }
 
@@ -325,19 +280,7 @@ function clearStrroage(e) {
 if (window.performance) {
     localStorage.clear();
 }
-document.addEventListener('click',generateOptionsFieldOnClick)
-function generateOptionsFieldOnClick(e) {
-    if(e.target && e.target.className == 'btn btn-info insertRow') {
-        let id = e.target.id
-        var optionFieldsWrapper = document.getElementsByClassName('optionFieldsWrapper')[id]
-        optionFieldsWrapper.insertAdjacentHTML("beforeend", '<div class="optionInputWrapper"><input type="text" class="form-control" name="question_'+id+'" value="" required/><span class="glyphicon glyphicon-remove" aria-hidden="true" onclick="removeOptionElm(this)"></span></div>')
-    }
-}
-function clearOptionsDiv(id) {
-    var optionFieldsWrapper = document.getElementsByClassName('optionFieldsWrapper')[id]
-    optionFieldsWrapper.style.display = 'none'
-    optionFieldsWrapper.innerHTML = ''
-}
+
 function enableOptionDiv() {
     var optionFieldsWrapper = document.getElementsByClassName('optionFieldsWrapper')[optAmtIndex]
     let optTyp              = $( ".optionType option:selected" ).val()
@@ -352,7 +295,56 @@ function enableOptionDiv() {
     }
 }
 
+document.addEventListener('click',generateOptionsFieldOnClick)
+function generateOptionsFieldOnClick(e) {
+    if(e.target && e.target.className == 'btn btn-info insertRow') {
+        let id = e.target.id
+        var optionFieldsWrapper = document.getElementsByClassName('optionFieldsWrapper')[id]
+        optionFieldsWrapper.insertAdjacentHTML("beforeend", '<div class="optionInputWrapper"><input type="text" class="form-control" name="question_'+id+'" value="" required/><span class="glyphicon glyphicon-remove" aria-hidden="true" onclick="removeOptionElm(this)"></span></div>')
+    }
+}
 function generateOptionsField(opName) {
     var optionsField = '<div class="optionInputWrapper"><input type="text" class="form-control" name="question_'+opName+'" value="" required/></div>'
     return optionsField
+}
+function clearOptionsDiv(id) {
+    var optionFieldsWrapper = document.getElementsByClassName('optionFieldsWrapper')[id]
+    if(optionFieldsWrapper.getElementsByClassName('optionInputWrapper').length > 0) {
+        let storeData = JSON.parse(localStorage.getItem("optionList"));
+        var mainStorage = '{"optionList" : []}'
+        var mainStoragePrse = JSON.parse(mainStorage);
+
+        for (let index = 0; index < optionFieldsWrapper.getElementsByClassName('optionInputWrapper').length; index++) {
+            let oid = optionFieldsWrapper.getElementsByClassName('optionInputWrapper')[index].getElementsByClassName('opt_id')[0].innerHTML
+            let qid = document.getElementsByClassName('inputBlock')[id].getElementsByClassName('d_id')[0].innerHTML
+            localStorageStore(qid,oid)
+        }
+    }
+    optionFieldsWrapper.style.display = 'none'
+    optionFieldsWrapper.innerHTML = ''
+}
+/** 
+ * 
+ * Generating Option Fields
+ * set a counter (c) to check the first option field which can not be deleted 
+ * 
+*/
+
+function optionFieldMaker(wraper, c, index, elm, qId, optId) {
+    if(c == 1) {
+        wraper.innerHTML += `
+            <div class="optionInputWrapper">
+                <input type="text" class="form-control" name="question_${index}" value="${elm}" required="">
+                <span style="display:none" class="opt_id">${optId}</span>
+            </div>
+        `
+    }else{
+        wraper.innerHTML += `
+            <div class="optionInputWrapper">
+                <input type="text" class="form-control" name="question_${index}" value="${elm}" required="">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true" onclick="removeOptionElm(this,${qId},${optId})"></span>
+                <span style="display:none" class="opt_id">${optId}</span>
+            </div>
+        `
+    }
 }
