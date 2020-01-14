@@ -1,6 +1,7 @@
 // Inital Variable Declare Related In Global Scope
 const addBlock    = document.getElementById('addBlock')
 const formWrapper = document.getElementById('formWrapper')
+const inputWrapper = document.getElementById('inputWrapper')
 var optAmtIndex;
 
 if(addBlock != undefined) {
@@ -19,7 +20,7 @@ document.addEventListener('click',generateOptionsFieldOnClick)
 */
 function createBlock(e) {
     e.preventDefault();
-    let inputBlockLength = formWrapper.getElementsByClassName('inputBlock').length
+    let inputBlockLength = inputWrapper.getElementsByClassName('inputBlock').length
     if(document.getElementById('btnMainSubmit') != undefined) {
         document.getElementById('btnMainSubmit').style.display = 'block'
     }
@@ -40,17 +41,16 @@ function createBlock(e) {
                     <option value="btnFile_${inputBlockLength}">File</option>
                 </select>
             </div>
-            <div class="optionFieldsWrapper">
+            <div class ="optionFieldsWrapper" id="optionFieldsWrapper_${inputBlockLength}">
                 
             </div>
     `
-    formWrapper.appendChild(newBox);
+    inputWrapper.appendChild(newBox);
 }
 
 function enableAmountField(e) {
     if(e.target && e.target.className == 'form-control optionType') {
         optAmtIndex = e.target.value.split('_')[1]
-
         let optionType = document.querySelector('.optionType')
         let optTyp = optionType.options[optionType.selectedIndex].value
 
@@ -63,7 +63,7 @@ function enableAmountField(e) {
 }
 
 function enableOptionDiv() {
-    var optionFieldsWrapper = document.getElementsByClassName('optionFieldsWrapper')[optAmtIndex]
+    var optionFieldsWrapper = document.querySelector('#optionFieldsWrapper_'+optAmtIndex)
     let optTyp              = $(".optionType option:selected").val()
     
     optionFieldsWrapper.innerHTML = '';
@@ -84,13 +84,15 @@ function generateOptionsField(opName) {
 function generateOptionsFieldOnClick(e) {
     if(e.target && e.target.className == 'btn btn-info insertRow') {
         let id = e.target.id
-        var optionFieldsWrapper = document.getElementsByClassName('optionFieldsWrapper')[id] 
+        var optionFieldsWrapper = document.querySelector('#optionFieldsWrapper_'+id) 
         optionFieldsWrapper.insertAdjacentHTML("beforeend", '<div class="optionInputWrapper"><input type="text" class="form-control" name="question_'+id+'" value="" required/><span class="glyphicon glyphicon-remove" aria-hidden="true" onclick="removeOptionElm(this)"></span></div>')
     }
 }
 
 function clearOptionsDiv(id) {
-    var optionFieldsWrapper = document.getElementsByClassName('optionFieldsWrapper')[id]
+    var optionFieldsWrapper = document.querySelector('#optionFieldsWrapper_'+id)
     optionFieldsWrapper.style.display = 'none'
     optionFieldsWrapper.innerHTML = ''
 }
+
+$("#inputWrapper").sortable();

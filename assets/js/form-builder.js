@@ -166,10 +166,10 @@ function getInput() {
     'active_status':activeStatus,
     'fields': {}
     }
-    for (let j = 0; j < formBox.length; j++) {
+    for (let j = 0; j < formBox.length; j++) {        
         fieldArr.fields['field_'+j] = {
             'type': formBox[j].querySelector('.optionType').options[formBox[j].querySelector('.optionType').selectedIndex].value.split('_')[0],
-            'label': formBox[j].querySelector('input[name=question_'+j+']').value,
+            'label': formBox[j].querySelector('.form-control').value,
             'options': {}
         }
         var optionDivLen = formBox[j].querySelector('.optionFieldsWrapper').getElementsByClassName('form-control')   

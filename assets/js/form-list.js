@@ -96,53 +96,52 @@ $('#edit-modal').on('show.bs.modal', function(e) {
                 `;
 
                 Object.keys(item)
-                .forEach(function(key) {
-                    let optionDiv
-                    let splitKey = key.split('_')
-                    if(splitKey[0] == 'Fields') {
-                        //console.log(key, item[key]);
-                        var newBox = document.createElement("div");
-                        newBox.className = "form-group inputBlock";
-                    
-                        newBox.innerHTML += `
-                            <label>Label </label>
-                            <input type="text" class="form-control" name="question_${splitKey[1]}" value="${item[key].input_label}" required="">
-                            <input type="hidden" class="question_id" value="question_${splitKey[1]}">
-                            <span style="display:none" class="d_id">${item[key].que_id}</span>
-                            <div class="optDefineDiv">
-                                <label>Select option Type</label>
-                                <select name="" class="form-control optionType" id="editOpTyp_${splitKey[1]}" required="">
-                                    <option value="">Select One</option>
-                                    <option value="btntextField_${splitKey[1]}">Text Field</option>
-                                    <option value="btnchkBox_${splitKey[1]}">Checkbox</option>
-                                    <option value="btnRadio_${splitKey[1]}">Radio</option>
-                                    <option value="btndropDown_${splitKey[1]}">DropDown</option>
-                                    <option value="btnFile_${splitKey[1]}">File</option>
-                                </select>
-                            </div>
-                        `
-                        showData.appendChild(newBox);
-                        $('#editOpTyp_'+splitKey[1]).val(item[key].input_type+'_'+splitKey[1])
-                        if(item[key].options != undefined) {
-                            var optField = document.createElement("div");
-                            optField.className = "optionFieldsWrapper";
-                            optField.style.display = 'block'
-                            optField.innerHTML += ''
-                            optField.innerHTML += '<h4>Options List </h4>'
-                            optField.innerHTML += '<a class="btn btn-info insertRow" id="'+splitKey[1]+'">Add Row</a>'
-                            let c = 0;
-                            item[key].options.forEach(element => {
-                                c++
-                                optionFieldMaker(optField,c,splitKey[1], element.option_name, item[key].que_id, element.option_id)
-                            });
-                            newBox.appendChild(optField);
-                        }else{
-                            var optField = document.createElement("div");
-                            optField.className = "optionFieldsWrapper";
-                            newBox.appendChild(optField);
-                        }
-                    }  
-                }); // End Of Foreach
+                    .forEach(function(key) {
+                        let optionDiv
+                        let splitKey = key.split('_')
+                        if(splitKey[0] == 'Fields') {
+                            var newBox = document.createElement("div");
+                            newBox.className = "form-group inputBlock";
+                        
+                            newBox.innerHTML += `
+                                <label>Label </label>
+                                <input type="text" class="form-control" name="question_${splitKey[1]}" value="${item[key].input_label}" required="">
+                                <input type="hidden" class="question_id" value="question_${splitKey[1]}">
+                                <span style="display:none" class="d_id">${item[key].que_id}</span>
+                                <div class="optDefineDiv">
+                                    <label>Select option Type</label>
+                                    <select name="" class="form-control optionType" id="editOpTyp_${splitKey[1]}" required="">
+                                        <option value="">Select One</option>
+                                        <option value="btntextField_${splitKey[1]}">Text Field</option>
+                                        <option value="btnchkBox_${splitKey[1]}">Checkbox</option>
+                                        <option value="btnRadio_${splitKey[1]}">Radio</option>
+                                        <option value="btndropDown_${splitKey[1]}">DropDown</option>
+                                        <option value="btnFile_${splitKey[1]}">File</option>
+                                    </select>
+                                </div>
+                            `
+                            showData.appendChild(newBox);
+                            $('#editOpTyp_'+splitKey[1]).val(item[key].input_type+'_'+splitKey[1])
+                            if(item[key].options != undefined) {
+                                var optField = document.createElement("div");
+                                optField.className = "optionFieldsWrapper";
+                                optField.style.display = 'block'
+                                optField.innerHTML += ''
+                                optField.innerHTML += '<h4>Options List </h4>'
+                                optField.innerHTML += '<a class="btn btn-info insertRow" id="'+splitKey[1]+'">Add Row</a>'
+                                let c = 0;
+                                item[key].options.forEach(element => {
+                                    c++
+                                    optionFieldMaker(optField,c,splitKey[1], element.option_name, item[key].que_id, element.option_id)
+                                });
+                                newBox.appendChild(optField);
+                            }else{
+                                var optField = document.createElement("div");
+                                optField.className = "optionFieldsWrapper";
+                                newBox.appendChild(optField);
+                            }
+                        }  
+                    }); // End Of Foreach
                 
                 $("#formType").val(item.form_type);
                 $("#activeStatus").val(item.active_status);
