@@ -256,6 +256,8 @@ function removeOptionElm(el,qid,id) {
     el.closest('.optionInputWrapper').remove()
 }
 
+
+// local stroage setup starts
 function localStorageStore(qid,id) {
     let storeData = JSON.parse(localStorage.getItem("optionList"));
     var mainStorage = '{"optionList" : []}'
@@ -269,9 +271,7 @@ function localStorageStore(qid,id) {
         localStorage.setItem("optionList",JSON.stringify(storeData));
     }
 }
-
 document.addEventListener('click', clearStrroage)
-
 function clearStrroage(e) {
     if(e.target && e.target.id == 'btnCloseEdit') {
         localStorage.removeItem('optionList');
@@ -280,6 +280,7 @@ function clearStrroage(e) {
 if (window.performance) {
     localStorage.clear();
 }
+// local stroage setup ends
 
 function enableOptionDiv() {
     var optionFieldsWrapper = document.getElementsByClassName('optionFieldsWrapper')[optAmtIndex]
@@ -310,10 +311,6 @@ function generateOptionsField(opName) {
 function clearOptionsDiv(id) {
     var optionFieldsWrapper = document.getElementsByClassName('optionFieldsWrapper')[id]
     if(optionFieldsWrapper.getElementsByClassName('optionInputWrapper').length > 0) {
-        let storeData = JSON.parse(localStorage.getItem("optionList"));
-        var mainStorage = '{"optionList" : []}'
-        var mainStoragePrse = JSON.parse(mainStorage);
-
         for (let index = 0; index < optionFieldsWrapper.getElementsByClassName('optionInputWrapper').length; index++) {
             let oid = optionFieldsWrapper.getElementsByClassName('optionInputWrapper')[index].getElementsByClassName('opt_id')[0].innerHTML
             let qid = document.getElementsByClassName('inputBlock')[id].getElementsByClassName('d_id')[0].innerHTML
