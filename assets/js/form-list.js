@@ -325,3 +325,34 @@ function clearStrroage(e) {
 if (window.performance) {
     localStorage.clear();
 }
+document.addEventListener('click',generateOptionsFieldOnClick)
+function generateOptionsFieldOnClick(e) {
+    if(e.target && e.target.className == 'btn btn-info insertRow') {
+        let id = e.target.id
+        var optionFieldsWrapper = document.getElementsByClassName('optionFieldsWrapper')[id]
+        optionFieldsWrapper.insertAdjacentHTML("beforeend", '<div class="optionInputWrapper"><input type="text" class="form-control" name="question_'+id+'" value="" required/><span class="glyphicon glyphicon-remove" aria-hidden="true" onclick="removeOptionElm(this)"></span></div>')
+    }
+}
+function clearOptionsDiv(id) {
+    var optionFieldsWrapper = document.getElementsByClassName('optionFieldsWrapper')[id]
+    optionFieldsWrapper.style.display = 'none'
+    optionFieldsWrapper.innerHTML = ''
+}
+function enableOptionDiv() {
+    var optionFieldsWrapper = document.getElementsByClassName('optionFieldsWrapper')[optAmtIndex]
+    let optTyp              = $( ".optionType option:selected" ).val()
+    
+    optionFieldsWrapper.innerHTML = '';
+    if(optTyp != '') {
+        var generateHtml = generateOptionsField(optAmtIndex)
+        optionFieldsWrapper.style.display = 'block'
+        optionFieldsWrapper.innerHTML += '<h4>Options List </h4>'
+        optionFieldsWrapper.innerHTML += '<a class="btn btn-info insertRow" id="'+optAmtIndex+'">Add Row</a>'
+        optionFieldsWrapper.innerHTML += generateHtml
+    }
+}
+
+function generateOptionsField(opName) {
+    var optionsField = '<div class="optionInputWrapper"><input type="text" class="form-control" name="question_'+opName+'" value="" required/></div>'
+    return optionsField
+}

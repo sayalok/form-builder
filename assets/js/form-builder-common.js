@@ -10,7 +10,7 @@ if(addBlock != undefined) {
 
 // event delegation event Listner
 document.addEventListener('change', enableAmountField)
-document.addEventListener('click',generateOptionsFieldOnClick)
+//document.addEventListener('click',generateOptionsFieldOnClick)
 
 /** 
  * 
@@ -62,37 +62,37 @@ function enableAmountField(e) {
     }
 }
 
-function enableOptionDiv() {
-    var optionFieldsWrapper = document.querySelector('#optionFieldsWrapper_'+optAmtIndex)
-    let optTyp              = $(".optionType option:selected").val()
+// function enableOptionDiv() {
+//     var optionFieldsWrapper = document.querySelector('#optionFieldsWrapper_'+optAmtIndex)
+//     let optTyp              = $(".optionType option:selected").val()
     
-    optionFieldsWrapper.innerHTML = '';
-    if(optTyp != '') {
-        var generateHtml = generateOptionsField(optAmtIndex)
-        optionFieldsWrapper.style.display = 'block'
-        optionFieldsWrapper.innerHTML += '<h4>Options List </h4>'
-        optionFieldsWrapper.innerHTML += '<a class="btn btn-info insertRow" id="'+optAmtIndex+'">Add Row</a>'
-        optionFieldsWrapper.innerHTML += generateHtml
-    }
-}
+//     optionFieldsWrapper.innerHTML = '';
+//     if(optTyp != '') {
+//         var generateHtml = generateOptionsField(optAmtIndex)
+//         optionFieldsWrapper.style.display = 'block'
+//         optionFieldsWrapper.innerHTML += '<h4>Options List </h4>'
+//         optionFieldsWrapper.innerHTML += '<a class="btn btn-info insertRow" id="'+optAmtIndex+'">Add Row</a>'
+//         optionFieldsWrapper.innerHTML += generateHtml
+//     }
+// }
 
-function generateOptionsField(opName) {
-    var optionsField = '<div class="optionInputWrapper"><input type="text" class="form-control" name="question_'+opName+'" value="" required/></div>'
-    return optionsField
-}
+// function generateOptionsField(opName) {
+//     var optionsField = '<div class="optionInputWrapper"><input type="text" class="form-control" name="question_'+opName+'" value="" required/></div>'
+//     return optionsField
+// }
 
-function generateOptionsFieldOnClick(e) {
-    if(e.target && e.target.className == 'btn btn-info insertRow') {
-        let id = e.target.id
-        var optionFieldsWrapper = document.querySelector('#optionFieldsWrapper_'+id) 
-        optionFieldsWrapper.insertAdjacentHTML("beforeend", '<div class="optionInputWrapper"><input type="text" class="form-control" name="question_'+id+'" value="" required/><span class="glyphicon glyphicon-remove" aria-hidden="true" onclick="removeOptionElm(this)"></span></div>')
-    }
-}
+// function generateOptionsFieldOnClick(e) {
+//     if(e.target && e.target.className == 'btn btn-info insertRow') {
+//         let id = e.target.id
+//         var optionFieldsWrapper = document.querySelector('#optionFieldsWrapper_'+id) 
+//         optionFieldsWrapper.insertAdjacentHTML("beforeend", '<div class="optionInputWrapper"><input type="text" class="form-control" name="question_'+id+'" value="" required/><span class="glyphicon glyphicon-remove" aria-hidden="true" onclick="removeOptionElm(this)"></span></div>')
+//     }
+// }
 
-function clearOptionsDiv(id) {
-    var optionFieldsWrapper = document.querySelector('#optionFieldsWrapper_'+id)
-    optionFieldsWrapper.style.display = 'none'
-    optionFieldsWrapper.innerHTML = ''
-}
+// function clearOptionsDiv(id) {
+//     var optionFieldsWrapper = document.querySelector('#optionFieldsWrapper_'+id)
+//     optionFieldsWrapper.style.display = 'none'
+//     optionFieldsWrapper.innerHTML = ''
+// }
 
 $("#inputWrapper").sortable();
