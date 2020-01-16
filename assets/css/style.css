@@ -103,3 +103,6 @@
     float: left;
     border-bottom-width: 0;
 }
+.previewOptionWrap {
+    padding-left: 10px;
+}

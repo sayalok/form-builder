@@ -17,6 +17,7 @@ function getFormData() {
     $.ajax({
         url: apiurl,
         method: 'post',
+        crossDomain: true,
         type: "POST",
         data: {'data':'test'},
         success: function(res) {
@@ -32,6 +33,8 @@ function getFormData() {
                             <td class="col-xs-2">${item.form_type}</td>
                             <td class="col-xs-2">${item.pay_amount}</td>
                             <td class="col-xs-3">
+                                <a href="#previewMod" data-toggle="modal" id="${item.id}" data-target="#preview-modal">Preview</a>
+                                ||
                                 <a href="#editMod" data-toggle="modal" id="${item.id}" data-target="#edit-modal">Edit</a>
                                 ||
                                 <a href="#deleteMod" data-toggle="modal" id="${item.id}" data-active-status="${item.active_status}" data-target="#delete-modal">Delete</a>
@@ -48,7 +51,76 @@ function getFormData() {
         }
     });
 }
+$('#preview-modal').on('show.bs.modal', function(e) {
+    var id = e.relatedTarget.id;
+    apiurl = apiDomain+'getEditFormDataById/'
+    console.log(id)
+    $.ajax({
+        url: apiurl,
+        method: 'post',
+        type: "POST",
+        data: {'data':id},
+        success: function(result) {
+            let res = JSON.parse(result);
+            let formData = res.data[id]
+            console.log(formData)
+            let previewForm = document.getElementById('previewForm');
+            previewForm.innerHTML = '';
+            previewForm.innerHTML += `<h3 class="text-center">${formData.form_name}</h3>`
+            if(formData.form_type === 'service') {
+                previewForm.innerHTML += `
+                    <div class="pull-left"></div>
+                    <div class="pull-right">Payable Amount: ${formData.pay_amount}</div>
+                    <div class="clearfix"></div>
+                `
+            }
+            Object.keys(formData)
+                .forEach(function(key) {
+                    let splitKey = key.split('_')
+                    if(splitKey[0] == 'Fields') {
+                        var formField = document.createElement("div");
+                        formField.className = "form-group";
 
+                        formField.innerHTML += `
+                            <label>${formData[key].input_label}</label>
+                        `
+                        var optionWrap = document.createElement("div");
+                        //formField.innerHTML += setInputType(formData[key].input_type,formData[key].options)
+                        optionWrap.innerHTML += setInputType(formData[key].input_type,formData[key].options)
+                        formField.appendChild(optionWrap)
+                        previewForm.appendChild(formField);
+                    }
+                })
+        }
+    });
+})
+
+function setInputType(data,options) {
+    var inputVal = '';
+    if(data === "btntextField") {
+        inputVal = `<input type="text" class="form-control">`
+    }else if(data === "btnFile") {
+        inputVal = `<input type="file" class="form-control">`
+    }else if(data === "btnchkBox") {
+        options.forEach(element => {
+            inputVal += `<div class="previewOptionWrap"><input type="checkbox"> ${element.option_name}</div>`
+        });
+    }else if(data === "btnRadio"){
+        options.forEach(element => {
+            if(element.option_name != undefined) {
+                inputVal += `<div class="previewOptionWrap"><input type="radio"> ${element.option_name}</div>`
+            }
+        });
+    }else if(data === "btndropDown"){
+        inputVal += `<select class="form-control">`
+        inputVal += `<option>Select One</option>`
+            options.forEach(element => {
+                inputVal += `<option>${element.option_name}</option>`
+            });
+        inputVal += `</select>`
+    }
+    return inputVal
+}
 $('#edit-modal').on('show.bs.modal', function(e) {
     var id = e.relatedTarget.id;
     apiurl = apiDomain+'getEditFormDataById/'
@@ -59,6 +131,10 @@ $('#edit-modal').on('show.bs.modal', function(e) {
         data: {'data':id},
         success: function(result) {
             let res = JSON.parse(result);
+            
+            var inputWrapper = document.createElement("div");
+            inputWrapper.id = 'inputWrapper';
+
             let showData = document.getElementById('formWrapper');
             showData.innerHTML = '';
             let item = res.data[id];
@@ -86,7 +162,7 @@ $('#edit-modal').on('show.bs.modal', function(e) {
                         <option value="2">Pending</option>
                     </select>
                 `;
-
+                var optionTypeArr = []
                 Object.keys(item)
                     .forEach(function(key) {
                         let optionDiv
@@ -112,8 +188,9 @@ $('#edit-modal').on('show.bs.modal', function(e) {
                                     </select>
                                 </div>
                             `
-                            showData.appendChild(newBox);
-                            $('#editOpTyp_'+splitKey[1]).val(item[key].input_type+'_'+splitKey[1])
+                            inputWrapper.appendChild(newBox);
+                            optionTypeArr.push(item[key].input_type+'_'+splitKey[1])
+//                            $('#editOpTyp_'+splitKey[1]).val(item[key].input_type+'_'+splitKey[1])
                             if(item[key].options != undefined) {
                                 var optField = document.createElement("div");
                                 optField.className = "optionFieldsWrapper";
@@ -132,9 +209,17 @@ $('#edit-modal').on('show.bs.modal', function(e) {
                                 optField.className = "optionFieldsWrapper";
                                 newBox.appendChild(optField);
                             }
-                        }  
+                        }
                     }); // End Of Foreach
                 
+                showData.appendChild(inputWrapper)
+                if(optionTypeArr.length > 0) {
+                    optionTypeCount = 0
+                    optionTypeArr.forEach(function(val) {
+                        document.getElementById('editOpTyp_'+optionTypeCount).value = val
+                        optionTypeCount++
+                    })
+                }
                 $("#formType").val(item.form_type);
                 $("#activeStatus").val(item.active_status);
             }

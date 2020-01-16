@@ -1,7 +1,9 @@
 // Inital Variable Declare Related In Global Scope
 const addBlock    = document.getElementById('addBlock')
 const formWrapper = document.getElementById('formWrapper')
-const inputWrapper = document.getElementById('inputWrapper')
+if(document.getElementById('inputWrapper')) {
+    const inputWrapper = document.getElementById('inputWrapper')
+}
 var optAmtIndex;
 
 if(addBlock != undefined) {

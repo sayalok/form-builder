@@ -129,6 +129,7 @@ class FormBuilder extends CI_Controller {
 
     public function getFormList()
     {
+        header('Access-Control-Allow-Origin: *');
         $response = [];
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
             $dbCon = $this->load->database($this->dbName, TRUE);

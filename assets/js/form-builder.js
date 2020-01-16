@@ -1,7 +1,7 @@
 const environment = 'dev'
 let apiDomain;
 
-if(environment == 'production') {
+if(environment == 'dev') {
     apiDomain = 'https://agentapi.paywellonline.com/index.php?/FormBuilder/'
 }else{
     apiDomain = 'http://localhost/paywellapi/index.php?/FormBuilder/'
