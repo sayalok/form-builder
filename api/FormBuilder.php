@@ -393,7 +393,7 @@ class FormBuilder extends CI_Controller {
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id = $_POST['data'];
             $dbCon = $this->load->database($this->dbName, TRUE);
-//            $res = $dbCon->query("SELECT form_id, name, form_type, pay_amount, active_status, qid, que_type, question, optid, que_option FROM form LEFT JOIN questions ON questions.form_id = form.id LEFT JOIN questions_option ON questions_option.question_id = questions.qid WHERE form.active_status != 0 AND form.id =".$id." ORDER BY questions.qid");
+            //$res = $dbCon->query("SELECT form_id, name, form_type, pay_amount, active_status, qid, que_type, question, optid, que_option FROM form LEFT JOIN questions ON questions.form_id = form.id LEFT JOIN questions_option ON questions_option.question_id = questions.qid WHERE form.active_status != 0 AND form.id =".$id." ORDER BY questions.qid");
             $res = $dbCon->query("SELECT form_id, name, form_type, pay_amount, active_status, qid, que_type, question, optid, que_option FROM form LEFT JOIN questions ON questions.form_id = form.id LEFT JOIN questions_option ON questions_option.question_id = questions.qid WHERE form.id = ".$id." AND form.active_status != 0 AND questions.que_status > 0 AND ( questions_option.opt_status > 0 OR questions_option.opt_status IS NULL ) ORDER BY qid");
             $result = json_decode(json_encode($res->result()),TRUE);
             if(!empty($result)) {
@@ -553,6 +553,37 @@ class FormBuilder extends CI_Controller {
             $response['message'] = "Invalid Request Method";
         }
         echo json_encode($response);
+    }
+
+    public function publishFOrm()
+    {
+
+        /**
+         * 
+         *  0 For delete
+         *  1 For Publish
+         *  2 for Pending
+         * 
+         */
+        $response = [];
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $data = $_POST['data'];
+            
+            $dbCon = $this->load->database($this->dbName, TRUE);
+            $res = $dbCon->query("UPDATE form SET active_status=".$data['publish_form_status']." WHERE id=".$data['publish_form_id']."");
+            if($res) {
+                $response['status'] = 200;
+                $response['message'] = "Successful!";
+            }else{
+                $response['status'] = 500;
+                $response['message'] = "Something Went Wrong!";
+            }
+
+        }else{
+            $response['status'] = 500;
+            $response['message'] = "Invalid Request Method";
+        }
+        echo json_encode($response);   
     }
 
     public function findRowId($dbCon, $fild, $tbl)

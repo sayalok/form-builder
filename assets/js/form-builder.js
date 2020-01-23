@@ -1,7 +1,7 @@
-const environment = 'dev'
+const environment = 'production'
 let apiDomain;
 
-if(environment == 'dev') {
+if(environment == 'production') {
     apiDomain = 'https://agentapi.paywellonline.com/index.php?/FormBuilder/'
 }else{
     apiDomain = 'http://localhost/paywellapi/index.php?/FormBuilder/'
@@ -127,10 +127,17 @@ function removeOptionElm(el) {
 
 
 function getInput() {
+
+    /*
+        activeStatus
+            0 for delete
+            1 for Publish 
+            2 for Pending
+    */
     let formName = document.getElementById('form_name').value;
     formBox = formBuilder.getElementsByClassName('inputBlock');
     let formType = document.getElementById("formType").value;
-    let activeStatus = document.getElementById("activeStatus").value;
+    let activeStatus = 2;
     let userId = document.getElementById("user_id").value;
     let amount = document.getElementById("amount").value;
     

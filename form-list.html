@@ -37,10 +37,11 @@
                 <thead>
                     <tr>
                         <th class="col-xs-1">#</th>
-                        <th class="col-xs-4">Form Name</th>
-                        <th class="col-xs-2">Form Type</th>
-                        <th class="col-xs-2">Amount</th>
-                        <th class="col-xs-3">Action</th>
+						<th class="col-xs-4">Form Name</th>
+						<th class="col-xs-1">Form Type</th>
+						<th class="col-xs-1">Amount</th>
+						<th class="col-xs-3">Action</th>
+						<th class="col-xs-1">Status</th>
                     </tr>
                 </thead>
                 <tbody id="formList">
@@ -62,6 +63,15 @@
                             </div>
                         </div>
                         <div class="modal-footer">
+                            <form method="post" id="publishForm">
+                                <input type="hidden" class="form-control" id="publish_form_id" name="publish_form_id" value="">
+                                <input type="hidden" class="form-control" id="publish_form_status" name="publish_form_status" value="">
+                                <button 
+                                    type="button" class="btn btn-success pull-left" 
+                                    data-dismiss="modal" id="btnpublish">
+                                Publish
+                                </button>
+                            </form>
                             <button type="button" class="btn btn-default" data-dismiss="modal" id="btnCloseEdit">Close</button>
                         </div>
                     </div>

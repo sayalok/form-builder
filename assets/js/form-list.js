@@ -1,4 +1,4 @@
-const environment = 'dev'
+const environment = 'production'
 let apiDomain;
 
 if(environment == 'production') {
@@ -26,12 +26,13 @@ function getFormData() {
             if(data.data.length > 0) {
                 data.data.forEach(item => {
                     c++
+                    var asTxt = item.active_status == 1 ? 'publish' : 'pending' 
                     formListElm.innerHTML += `
                         <tr>
                             <td class="col-xs-1">${c}</td>
                             <td class="col-xs-4">${item.name}</td>
-                            <td class="col-xs-2">${item.form_type}</td>
-                            <td class="col-xs-2">${item.pay_amount}</td>
+                            <td class="col-xs-1">${item.form_type}</td>
+                            <td class="col-xs-1">${item.pay_amount}</td>
                             <td class="col-xs-3">
                                 <a href="#previewMod" data-toggle="modal" id="${item.id}" data-target="#preview-modal">Preview</a>
                                 ||
@@ -39,6 +40,7 @@ function getFormData() {
                                 ||
                                 <a href="#deleteMod" data-toggle="modal" id="${item.id}" data-active-status="${item.active_status}" data-target="#delete-modal">Delete</a>
                             </td>
+                            <td class=""col-xs-1> ${asTxt}</td>
                         </tr>
                     `
                 });
@@ -54,7 +56,6 @@ function getFormData() {
 $('#preview-modal').on('show.bs.modal', function(e) {
     var id = e.relatedTarget.id;
     apiurl = apiDomain+'getEditFormDataById/'
-    console.log(id)
     $.ajax({
         url: apiurl,
         method: 'post',
@@ -63,8 +64,16 @@ $('#preview-modal').on('show.bs.modal', function(e) {
         success: function(result) {
             let res = JSON.parse(result);
             let formData = res.data[id]
-            console.log(formData)
             let previewForm = document.getElementById('previewForm');
+
+            document.getElementById('publish_form_id').value = res.data[id].form_id 
+            if(res.data[id].active_status == 1 ) {
+                document.getElementById('btnpublish').innerHTML = 'Pending'
+                document.getElementById('publish_form_status').value = 2
+            }else{
+                document.getElementById('btnpublish').innerHTML = 'Publish'
+                document.getElementById('publish_form_status').value = 1
+            }
             previewForm.innerHTML = '';
             previewForm.innerHTML += `<h3 class="text-center">${formData.form_name}</h3>`
             if(formData.form_type === 'service') {
@@ -429,4 +438,32 @@ function optionFieldMaker(wraper, c, index, elm, qId, optId) {
             </div>
         `
     }
+}
+
+// Publish Form
+if(document.getElementById('btnpublish') != undefined) {
+    document.getElementById('btnpublish').addEventListener('click', function (e) {
+        e.preventDefault();
+        var publish_form_id = document.getElementById('publish_form_id').value
+        var publish_form_status = document.getElementById('publish_form_status').value
+        let data = {
+            'publish_form_id': publish_form_id,
+            'publish_form_status': publish_form_status
+        }
+        let apiurl = apiDomain+'publishFOrm';
+        $.ajax({
+            url: apiurl,
+            method: 'post',
+            type: "POST",
+            data: {'data':data},
+            success: function(result) {
+                alertControl('block','Data Updated Successfuly!','alert-success')
+                $('#edit-modal').modal('hide');
+                localStorage.removeItem('optionList');
+            },
+            error: function(error) {
+                alertControl('block','Data Updated Failed!','alert-danger')
+            }
+        });
+    })
 }
