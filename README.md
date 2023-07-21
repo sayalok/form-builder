@@ -1,3 +1,3 @@
 # form-builder
 
-details readme will come soon
+Details readme will come soon
